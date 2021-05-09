@@ -29,36 +29,36 @@ class Resize(object):
 
     def __call__(self, image, boxes=None, tags=None):
         ori_h, ori_w, c = image.shape
-        if max(ori_h,ori_w) <= self.long_size:
+        if max(ori_h, ori_w) <= self.long_size:
             delta_w = self.width - ori_w
             delta_h = self.heigth - ori_h
-            
+
             bottom = delta_h
             right = delta_w
-            
-            color = [255,255,255]
-            new_image = cv2.copyMakeBorder(image, 0, bottom, 0, right, cv2.BORDER_CONSTANT,value=color)
+
+            color = [255, 255, 255]
+            new_image = cv2.copyMakeBorder(image, 0, bottom, 0, right, cv2.BORDER_CONSTANT, value=color)
             return new_image, boxes, tags
-        
-        if max(ori_h,ori_w) > self.long_size:
-            
+
+        if max(ori_h, ori_w) > self.long_size:
+
             # Resize image to longer size
-            scale = self.long_size*1.0 / max(ori_h,ori_w)
-            new_image=cv2.resize(image, dsize=None, fx=scale, fy=scale)       
-            if boxes is not None: 
+            scale = self.long_size * 1.0 / max(ori_h, ori_w)
+            new_image = cv2.resize(image, dsize=None, fx=scale, fy=scale)
+            if boxes is not None:
                 boxes[:, :, 0] *= scale
                 boxes[:, :, 1] *= scale
                 boxes[:, :, 0] = np.clip(boxes[:, :, 0], 0, self.width)
                 boxes[:, :, 1] = np.clip(boxes[:, :, 1], 0, self.heigth)
-            
+
             # Padding to longer size
-            if min(ori_h,ori_w) < self.long_size:     
+            if min(ori_h, ori_w) < self.long_size:
                 delta_w = self.width - new_image.shape[1]
-                color = [255,255,255]
-                new_image = cv2.copyMakeBorder(new_image, 0, 0, 0, delta_w, cv2.BORDER_CONSTANT,value=color)
-            boxes= np.array(boxes, dtype=np.int32)
+                color = [255, 255, 255]
+                new_image = cv2.copyMakeBorder(new_image, 0, 0, 0, delta_w, cv2.BORDER_CONSTANT, value=color)
+            bbox = np.array(boxes, dtype=np.int32)
             return new_image, boxes, tags
-            
+
 
 class RandomResize(object):
     def __init__(self, longer_sides=config.random_resize):
@@ -77,7 +77,7 @@ class RandomRotate(object):
 
 
 class RandomRatioScale(object):
-    def __init__(self, random_ratios=np.arange(0.8, 1.3, 0.1)):
+    def __init__(self, random_ratios=np.arange(0.8, 1.3, 0.05)):
         self.random_ratios = random_ratios
 
     def __call__(self, image, boxes, tags):
@@ -113,7 +113,7 @@ class build_transfrom(object):
     def __init__(self):
         self.augment = Compose([
             RandomRatioScale(),
-            RandomResize(),
+            # RandomResize(),
             # RandomRotate90(),
             RandomRotate(),
             RandomCrop()

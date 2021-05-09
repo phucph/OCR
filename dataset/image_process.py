@@ -1,6 +1,5 @@
 import numpy as np
 import torch
-import config
 # from numpy import random
 import cv2
 
@@ -172,10 +171,12 @@ def random_crop(image, boxes=None, tags=None, crop_size=(2176, 2176), max_tries=
 
 
 def random_ratio_scale(image, boxes=None, tags=None, ratios=np.arange(0.8, 1.3, 0.1)):
+    ori_h, ori_w, c = image.shape
+    if min(ori_h, ori_w) >= (2480 - 32):
+        ratios = np.arange(0.9, 1.15, 0.05)
     rand_index = torch.randint(0, len(ratios) - 1, (1,)).item()
     ratio = ratios[rand_index]
     ratio = np.sqrt(ratio)
-    ori_h, ori_w, c = image.shape
     new_h = int(ori_h * ratio)
     new_w = int(ori_w / ratio)
     new_image = cv2.resize(image, (new_w, new_h))
@@ -186,9 +187,6 @@ def random_ratio_scale(image, boxes=None, tags=None, ratios=np.arange(0.8, 1.3, 
 
 def random_resize(image, boxes=None, tags=None, longer_sides=np.arange(2176, 2480, 32)):
     ori_h, ori_w, c = image.shape
-    if max(ori_h, ori_w) <= config.train_long_size:
-        longer_sides = np.arange(640, 2480, 32)
-
     rand_index = torch.randint(0, len(longer_sides) - 1, (1,)).item()
     longer_side = longer_sides[rand_index]
     ratio = longer_side * 1.0 / ori_h
