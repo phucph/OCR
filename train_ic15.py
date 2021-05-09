@@ -273,7 +273,7 @@ def main(args):
         if 'synth' in args.pretrain:
             args.checkpoint += "_pretrain_synth"
         else:
-            args.checkpoint += "_pretrain_500"
+            args.checkpoint += "_pretrain_s640"
 
     print(('checkpoint path: %s'%args.checkpoint))
     print(('init lr: %.8f'%args.lr))
@@ -350,8 +350,8 @@ def main(args):
         print(('\nEpoch: [%d | %d] LR: %f' % (epoch + 1, args.n_epoch, optimizer.param_groups[0]['lr'])))
         
         train_loss, train_te_acc, train_te_iou = train(train_loader,images_loss, model, dice_loss, optimizer, epoch,writer)
-        ep=[50,100,150,200,250,300,350,400,450,500]
-        if epoch in ep :
+
+        if epoch %10 == 0 and epoch != 0:
             save_checkpoint({
                     'epoch': epoch + 1,
                     'state_dict': model.state_dict(),
@@ -367,7 +367,7 @@ def main(args):
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Hyperparams')
     parser.add_argument('--arch', nargs='?', type=str, default='resnet50')
-    parser.add_argument('--img_size', nargs='?', type=int, default=2284, #1280
+    parser.add_argument('--img_size', nargs='?', type=int, default=2480, #1280
                         help='Height of the input image')
     parser.add_argument('--n_epoch', nargs='?', type=int, default=503, 
                         help='# of the epochs')
@@ -375,7 +375,7 @@ if __name__ == '__main__':
                         help='Decrease learning rate at these epochs.')
     parser.add_argument('--batch_size', nargs='?', type=int, default=16,
                         help='Batch Size')
-    parser.add_argument('--lr', nargs='?', type=float, default=0.0008686, 
+    parser.add_argument('--lr', nargs='?', type=float, default=1e-3,
                         help='Learning Rate')
     parser.add_argument('--resume', nargs='?', type=str, default=None,    
                         help='Path to previous saved model to restart from')
