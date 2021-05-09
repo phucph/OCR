@@ -56,7 +56,7 @@ class Resize(object):
                 delta_w = self.width - new_image.shape[1]
                 color = [255,255,255]
                 new_image = cv2.copyMakeBorder(new_image, 0, 0, 0, delta_w, cv2.BORDER_CONSTANT,value=color)
-            bbox= np.array(boxes, dtype=np.int32)    
+            boxes= np.array(boxes, dtype=np.int32)
             return new_image, boxes, tags
             
 

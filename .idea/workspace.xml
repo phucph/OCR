@@ -2,11 +2,6 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="22c28575-791a-4c58-bb07-da436083031e" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/config.py" beforeDir="false" afterPath="$PROJECT_DIR$/config.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dataset/icdar2015_loader.py" beforeDir="false" afterPath="$PROJECT_DIR$/dataset/icdar2015_loader.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dataset/icdar2015_test_loader.py" beforeDir="false" afterPath="$PROJECT_DIR$/dataset/icdar2015_test_loader.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dataset/image_process.py" beforeDir="false" afterPath="$PROJECT_DIR$/dataset/image_process.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/dataset/transfrom.py" beforeDir="false" afterPath="$PROJECT_DIR$/dataset/transfrom.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -62,8 +57,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/dataset/transfrom.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="166">
-              <caret line="79" column="55" selection-start-line="79" selection-start-column="55" selection-end-line="79" selection-end-column="55" />
+            <state relative-caret-position="285">
+              <caret line="58" column="17" lean-forward="true" selection-start-line="58" selection-start-column="17" selection-end-line="58" selection-end-column="17" />
               <folding>
                 <element signature="e#0#12#0" expanded="true" />
               </folding>
@@ -151,18 +146,18 @@
       <workItem from="1620149795410" duration="792000" />
       <workItem from="1620228195087" duration="1416000" />
       <workItem from="1620533144263" duration="208000" />
-      <workItem from="1620535227746" duration="299000" />
+      <workItem from="1620535227746" duration="401000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="2738000" />
+    <option name="totallyTimeSpent" value="2840000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-10" y="35" width="1358" height="680" extended-state="0" />
     <editor active="true" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.26117104" />
+      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.26117104" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
@@ -176,7 +171,7 @@
       <window_info anchor="bottom" id="Version Control" order="8" />
       <window_info anchor="bottom" id="Database Changes" order="9" />
       <window_info anchor="bottom" id="Event Log" order="10" side_tool="true" />
-      <window_info anchor="bottom" id="Terminal" order="11" visible="true" weight="0.32906765" />
+      <window_info active="true" anchor="bottom" id="Terminal" order="11" visible="true" weight="0.32906765" />
       <window_info anchor="bottom" id="Python Console" order="12" />
       <window_info anchor="bottom" id="Messages" order="13" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
@@ -226,8 +221,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/dataset/transfrom.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="166">
-          <caret line="79" column="55" selection-start-line="79" selection-start-column="55" selection-end-line="79" selection-end-column="55" />
+        <state relative-caret-position="285">
+          <caret line="58" column="17" lean-forward="true" selection-start-line="58" selection-start-column="17" selection-end-line="58" selection-end-column="17" />
           <folding>
             <element signature="e#0#12#0" expanded="true" />
           </folding>
