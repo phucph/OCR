@@ -3,10 +3,11 @@ from pprint import pprint
 import numpy as np
 import util
 import pixel_link
+
 # slim = tf.contrib.slim
 
-#=====================================================================
-#====================Pre-processing params START======================
+# =====================================================================
+# ====================Pre-processing params START======================
 # VGG mean parameters.
 r_mean = 123.
 g_mean = 117.
@@ -18,41 +19,40 @@ use_rotation = True
 rotation_prob = 0.5
 max_expand_scale = 1
 expand_prob = 0
-min_object_covered = 0.1          # Minimum object to be cropped in random crop.
-bbox_crop_overlap = 0.2         # Minimum overlap to keep a bbox after cropping.
+min_object_covered = 0.1  # Minimum object to be cropped in random crop.
+bbox_crop_overlap = 0.2  # Minimum overlap to keep a bbox after cropping.
 crop_aspect_ratio_range = (0.5, 2.)  # Distortion ratio during cropping.
 area_range = [0.1, 1]
 flip = False
-using_shorter_side_filtering=True
+using_shorter_side_filtering = True
 min_shorter_side = 10
 max_shorter_side = np.infty
-#====================Pre-processing params END========================
-#=====================================================================
+# ====================Pre-processing params END========================
+# =====================================================================
 
 
-#=====================================================================
-#====================Post-processing params START=====================
+# =====================================================================
+# ====================Post-processing params START=====================
 decode_method = pixel_link.DECODE_METHOD_join
 min_area = 100
 min_height = 8
-#====================Post-processing params END=======================
-#=====================================================================
+# ====================Post-processing params END=======================
+# =====================================================================
 
 
-
-#=====================================================================
-#====================Training and model params START =================
+# =====================================================================
+# ====================Training and model params START =================
 dropout_ratio = 0
 max_neg_pos_ratio = 3
 
-OHEM_img_threshold = 0.1 
-OHEM_ratio = 0.5
+OHEM_img_threshold = 0.5
+OHEM_ratio = 0.3
 
-train_image_size = (2480, 2480) 
+train_image_size = (2480, 2480)
 train_long_size = 2480
-crop_size = (2176, 2176)
-random_resize = np.arange(2176, 2480, 1)
-max_tries = 50 #Max crop items  
+crop_size = (640, 640)
+random_resize = np.arange(2176, 2480, 32)
+max_tries = 100  # Max crop items
 
 pixel_neighbour_type = pixel_link.PIXEL_NEIGHBOUR_TYPE_8
 # pixel_neighbour_type = pixel_link.PIXEL_NEIGHBOUR_TYPE_4
@@ -67,30 +67,28 @@ pixel_cls_border_weight_lambda = 1.0
 pixel_cls_loss_weight_lambda = 2.0
 pixel_link_neg_loss_weight_lambda = 1.0
 pixel_link_loss_weight = 1.0
-#====================Training and model params END ===================
-#=====================================================================
+# ====================Training and model params END ===================
+# =====================================================================
 
 
-#====================Testing model START==============================
-#=====================================================================
-test_image_size = 2480
+# ====================Testing model START==============================
+# =====================================================================
+test_long_size = 2480
+
+# ====================Testing model END================================
+# =====================================================================
 
 
-
-#====================Testing model END================================
-#=====================================================================
-
-
-#=====================================================================
-#====================do-not-change configurations START===============
+# =====================================================================
+# ====================do-not-change configurations START===============
 num_classes = 2
 ignore_label = -1
 background_label = 0
 text_label = 1
 data_format = 'NHWC'
 train_with_ignored = False
-#====================do-not-change configurations END=================
-#=====================================================================
+# ====================do-not-change configurations END=================
+# =====================================================================
 
 global weight_decay
 
@@ -110,52 +108,57 @@ global num_neighbours
 global pixel_conf_threshold
 global link_conf_threshold
 
+
 def _set_weight_decay(wd):
     global weight_decay
     weight_decay = wd
+
 
 def _set_image_shape(shape):
     h, w = shape
     global train_image_shape
     global score_map_shape
     global image_shape
-    
+
     assert w % 4 == 0
     assert h % 4 == 0
-    
+
     train_image_shape = [h, w]
     score_map_shape = (int(h / strides[0]), int(w / strides[0]))
     image_shape = train_image_shape
+
 
 def _set_batch_size(bz):
     global batch_size
     batch_size = bz
 
+
 def _set_seg_th(pixel_conf_th, link_conf_th):
     global pixel_conf_threshold
     global link_conf_threshold
-    
+
     pixel_conf_threshold = pixel_conf_th
     link_conf_threshold = link_conf_th
-    
-    
-def  _set_train_with_ignored(train_with_ignored_):
-    global train_with_ignored    
+
+
+def _set_train_with_ignored(train_with_ignored_):
+    global train_with_ignored
     train_with_ignored = train_with_ignored_
+
 
 def _set_OHEM_img_threshold(images_loss):
     global OHEM_img_threshold
     value = images_loss.values()
     value = sorted(value, reverse=False)
-    OHEM_img_threshold = value[int(len(value)*0.7)]
+    OHEM_img_threshold = value[int(len(value) * 0.7)]
     return OHEM_img_threshold
-    
-    
-def init_config(image_shape, batch_size = 8, 
-                weight_decay = 0.0005, 
-                num_gpus = 2, 
-                pixel_conf_threshold = 0.6,
-                link_conf_threshold = 0.9):
+
+
+def init_config(image_shape, batch_size=8,
+                weight_decay=0.0005,
+                num_gpus=2,
+                pixel_conf_threshold=0.6,
+                link_conf_threshold=0.9):
     _set_seg_th(pixel_conf_threshold, link_conf_threshold)
     _set_weight_decay(weight_decay)
     _set_image_shape(image_shape)
@@ -163,7 +166,8 @@ def init_config(image_shape, batch_size = 8,
     global num_neighbours
     num_neighbours = pixel_link.get_neighbours_fn()[1]
 
-init_config((1088, 1088), 1,
+
+init_config((320, 320), 6,
             pixel_conf_threshold=0.8,
-            link_conf_threshold=0.8,)
+            link_conf_threshold=0.8, )
 # init_config((640, 640), 4)

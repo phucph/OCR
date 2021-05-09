@@ -11,7 +11,7 @@ import torch
 import config
 
 # ic15_root_dir = '/home/gem/phucph/PixelLink.pytorch/dataset/
-ic15_root_dir = 'dataset/
+ic15_root_dir = 'dataset/'
 ic15_test_data_dir = ic15_root_dir + 'train_image/'
 # ic15_test_gt_dir = ic15_root_dir + 'test_gt/'
 

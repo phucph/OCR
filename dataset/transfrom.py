@@ -77,7 +77,7 @@ class RandomRotate(object):
 
 
 class RandomRatioScale(object):
-    def __init__(self, random_ratios=np.arange(0.5, 1.5, 0.1)):
+    def __init__(self, random_ratios=np.arange(0.8, 1.3, 0.1)):
         self.random_ratios = random_ratios
 
     def __call__(self, image, boxes, tags):
@@ -115,7 +115,7 @@ class build_transfrom(object):
             RandomRatioScale(),
             RandomResize(),
             # RandomRotate90(),
-            # RandomRotate(),
+            RandomRotate(),
             RandomCrop()
         ])
 

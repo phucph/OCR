@@ -22,7 +22,7 @@ from .transfrom import build_transfrom, SythAugmentation
 
 # ic15_root_dir = '/home/gem/phucph/PixelLink.pytorch/dataset/'
 ic15_root_dir = 'dataset/'
-ic15_train_data_dir = ic15_root_dir + 'train_image/'
+ic15_train_data_dir = ic15_root_dir + 'train_images/'
 ic15_train_gt_dir = ic15_root_dir + 'train_gt/'
 # ic15_test_data_dir = ic15_root_dir + '/'
 # ic15_test_gt_dir = ic15_root_dir + 'Challenge4_Test_Task1_GT/'
