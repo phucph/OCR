@@ -239,8 +239,11 @@ class IC15Loader(data.Dataset):
             # TODO use transfrom here
             bboxes = np.reshape(bboxes, (-1, 4, 2)).astype(np.float)
             # img,bboxes = random_scale(img, bboxes, self.img_size[0])
-            img, bboxes, tags = self.transfrom_size(img, bboxes, tags)
+            # img, bboxes, tags = self.transfrom_size(img, bboxes, tags)
             img, bboxes, tags = self.transfrom(img, bboxes, tags)
+            bbox= np.array(bboxes, dtype=np.int32)
+            # cv2.drawContours(img, bbox, -1, (0, 255, 0), 2)
+            cv2.imwrite('output/' + img_path.split('/')[-1], img)
 
         # show image
         # cv2.imwrite('outputs/show_image_resize_test_1/' + img_path.split('/')[-1], img)

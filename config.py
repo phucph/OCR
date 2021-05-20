@@ -50,7 +50,7 @@ OHEM_ratio = 0.3
 
 train_image_size = (2480, 2480)
 train_long_size = 2480
-crop_size = (640, 640)
+crop_size = (1280, 1280)
 random_resize = np.arange(2176, 2480, 32)
 max_tries = 100  # Max crop items
 
@@ -167,7 +167,7 @@ def init_config(image_shape, batch_size=8,
     num_neighbours = pixel_link.get_neighbours_fn()[1]
 
 
-init_config((320, 320), 6,
+init_config((640, 640), 6,
             pixel_conf_threshold=0.8,
             link_conf_threshold=0.8, )
 # init_config((640, 640), 4)

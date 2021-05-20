@@ -112,8 +112,8 @@ class RandomRotate90(object):
 class build_transfrom(object):
     def __init__(self):
         self.augment = Compose([
+            RandomResize(),
             RandomRatioScale(),
-            # RandomResize(),
             # RandomRotate90(),
             RandomRotate(),
             RandomCrop()

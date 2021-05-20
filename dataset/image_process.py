@@ -4,7 +4,7 @@ import torch
 import cv2
 
 
-def random_crop_v2(image, boxes=None, tags=None, crop_size=(640, 640), max_tries=50):
+def random_crop_v2(image, boxes=None, tags=None, crop_size=(1280, 1280), max_tries=50):
     crop_h, crop_w = crop_size
     ori_h, ori_w, c = image.shape
     start_x_max = np.clip(ori_w - crop_w, 0, ori_w)
@@ -35,6 +35,8 @@ def random_crop_v2(image, boxes=None, tags=None, crop_size=(640, 640), max_tries
     hb_axis = np.where(h_array == 1)[0]
     wb_axis = np.where(w_array == 1)[0]
 
+
+    selected_boxes = []
     if len(h_axis) == 0 or len(w_axis) == 0:
         h, w, c = new_image.shape
         new_image = cv2.resize(new_image, (crop_w, crop_h))
@@ -56,21 +58,14 @@ def random_crop_v2(image, boxes=None, tags=None, crop_size=(640, 640), max_tries
             selected_boxes = np.where(np.sum(box_axis_in_area, axis=1) == 4)[0]
             if len(selected_boxes) > 0:
                 break
-        else:
-            selected_boxes = []
-            continue
-    if i == max_tries - 1:
-        h, w, c = new_image.shape
-        new_image = cv2.resize(new_image, (crop_w, crop_h))
-        boxes[:, :, 0] *= crop_w * 1.0 / w
-        boxes[:, :, 1] *= crop_h * 1.0 / h
-        return new_image, boxes, tags
+
     cropped_image = new_image[rand_start_y:rand_end_y,
                     rand_start_x:rand_end_x, :]
     boxes = boxes[selected_boxes]
     tags = tags[selected_boxes]
-    boxes[:, :, 0] -= rand_start_x
-    boxes[:, :, 1] -= rand_start_y
+    print()
+    # boxes[:, :, 0] -= rand_start_x
+    # boxes[:, :, 1] -= rand_start_y
     return cropped_image, boxes, tags
 
 
@@ -88,25 +83,25 @@ def random_crop(image, boxes=None, tags=None, crop_size=(2176, 2176), max_tries=
     new_image[0:ori_h, 0:ori_w, :] = image
 
     # =====================================================
-    # h_array = np.zeros((new_h), dtype=np.int32)
-    # w_array = np.zeros((new_w), dtype=np.int32)
-    # # print h_array.shape
-    # for box in boxes:
-    #     # print("box",box)
-    #     box = np.round(box, decimals=0).astype(np.int32)
-    #     minx = np.min(box[:, 0])
-    #     maxx = np.max(box[:, 0])
-    #     w_array[minx:maxx] = 1
-    #     miny = np.min(box[:, 1])
-    #     maxy = np.max(box[:, 1])
-    #     h_array[miny:maxy] = 1
+    h_array = np.zeros((new_h), dtype=np.int32)
+    w_array = np.zeros((new_w), dtype=np.int32)
+    # print h_array.shape
+    for box in boxes:
+        # print("box",box)
+        box = np.round(box, decimals=0).astype(np.int32)
+        minx = np.min(box[:, 0])
+        maxx = np.max(box[:, 0])
+        w_array[minx:maxx] = 1
+        miny = np.min(box[:, 1])
+        maxy = np.max(box[:, 1])
+        h_array[miny:maxy] = 1
 
-    # # ensure the cropped area not across a text
-    # # print("print",np.where(h_array == 0)[0])
-    # h_axis = np.where(h_array == 0)[0]
-    # w_axis = np.where(w_array == 0)[0]
-    # hb_axis = np.where(h_array == 1)[0]
-    # wb_axis = np.where(w_array == 1)[0]
+    # ensure the cropped area not across a text
+    # print("print",np.where(h_array == 0)[0])
+    h_axis = np.where(h_array == 0)[0]
+    w_axis = np.where(w_array == 0)[0]
+    hb_axis = np.where(h_array == 1)[0]
+    wb_axis = np.where(w_array == 1)[0]
     # ======================================================
 
     if start_x_max == 0 or start_y_max == 0:
@@ -124,6 +119,11 @@ def random_crop(image, boxes=None, tags=None, crop_size=(2176, 2176), max_tries=
             rand_end_x = rand_start_x + crop_w
             rand_start_y = torch.randint(0, start_y_max + 1, (1,)).item()
             rand_end_y = rand_start_y + crop_h
+            x_valid = rand_start_x in w_axis and rand_end_x in wb_axis
+            y_valid = rand_start_y in h_axis and rand_end_y in hb_axis
+            if not (x_valid and y_valid):
+                continue
+
 
             cropped_image = image[rand_start_y:rand_end_y,
                             rand_start_x:rand_end_x, :]
@@ -150,6 +150,17 @@ def random_crop(image, boxes=None, tags=None, crop_size=(2176, 2176), max_tries=
         rand_start_y = torch.randint(0, start_y_max + 1, (1,)).item()
         rand_end_y = rand_start_y + crop_h
 
+        x_valid = rand_start_x in w_axis and rand_end_x in wb_axis
+        y_valid = rand_start_y in h_axis and rand_end_y in hb_axis
+        if not (x_valid and y_valid):
+          print(wb_axis,hb_axis )
+          rand_index = torch.randint(0, len(wb_axis) - 160, (1,)).item()
+          rand_start_x = wb_axis[rand_index]
+          rand_end_x = rand_start_x + crop_w
+          rand_i = torch.randint(0, len(hb_axis) - 160, (1,)).item()
+          rand_start_y = hb_axis[rand_i]
+          rand_end_y = rand_start_y + crop_h
+
         cropped_image = image[rand_start_y:rand_end_y,
                         rand_start_x:rand_end_x, :]
 
@@ -173,7 +184,7 @@ def random_crop(image, boxes=None, tags=None, crop_size=(2176, 2176), max_tries=
 def random_ratio_scale(image, boxes=None, tags=None, ratios=np.arange(0.8, 1.3, 0.1)):
     ori_h, ori_w, c = image.shape
     if min(ori_h, ori_w) >= (2480 - 32):
-        ratios = np.arange(0.9, 1.15, 0.05)
+        ratios = np.arange(0.9, 1.15, 0.01)
     rand_index = torch.randint(0, len(ratios) - 1, (1,)).item()
     ratio = ratios[rand_index]
     ratio = np.sqrt(ratio)
@@ -185,8 +196,10 @@ def random_ratio_scale(image, boxes=None, tags=None, ratios=np.arange(0.8, 1.3, 
     return new_image, boxes, tags
 
 
-def random_resize(image, boxes=None, tags=None, longer_sides=np.arange(2176, 2480, 32)):
+def random_resize(image, boxes=None, tags=None, longer_sides=np.arange(1840, 2480, 32)):
     ori_h, ori_w, c = image.shape
+    if max(ori_h, ori_w <= 2480):
+      return image, boxes, tags
     rand_index = torch.randint(0, len(longer_sides) - 1, (1,)).item()
     longer_side = longer_sides[rand_index]
     ratio = longer_side * 1.0 / ori_h
