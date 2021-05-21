@@ -30,15 +30,7 @@ class Resize(object):
     def __call__(self, image, boxes=None, tags=None):
         ori_h, ori_w, c = image.shape
         if max(ori_h, ori_w) <= self.long_size:
-            delta_w = self.width - ori_w
-            delta_h = self.heigth - ori_h
-
-            bottom = delta_h
-            right = delta_w
-
-            color = [255, 255, 255]
-            new_image = cv2.copyMakeBorder(image, 0, bottom, 0, right, cv2.BORDER_CONSTANT, value=color)
-            return new_image, boxes, tags
+            return image, boxes, tags
 
         if max(ori_h, ori_w) > self.long_size:
 

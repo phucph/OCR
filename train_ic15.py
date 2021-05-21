@@ -192,7 +192,7 @@ def train(train_loader, images_loss, model, criterion, optimizer, epoch,writer=N
         else: 
             OHEM_img_threshold =  config.OHEM_img_threshold 
         
-        if(epoch % 100 == 0):
+        if(epoch % 10 == 0):
             train_loader.dataset.difficult_imgs_paths.clear()
         
         if loss > OHEM_img_threshold :
@@ -273,7 +273,7 @@ def main(args):
         if 'synth' in args.pretrain:
             args.checkpoint += "_pretrain_synth"
         else:
-            args.checkpoint += "_pretrain_s640"
+            args.checkpoint += "_pretrain_s1280"
 
     print(('checkpoint path: %s'%args.checkpoint))
     print(('init lr: %.8f'%args.lr))
@@ -325,6 +325,7 @@ def main(args):
         assert os.path.isfile(args.pretrain), 'Error: no checkpoint directory found!'
         checkpoint = torch.load(args.pretrain)
         model.load_state_dict(checkpoint['state_dict'])
+        start_epoch = checkpoint['epoch']
         logger = Logger(os.path.join(args.checkpoint, 'log.txt'), title=title)
         logger.set_names(['Learning Rate', 'Train Loss','Train Acc.', 'Train IOU.'])
     elif args.resume:
@@ -351,7 +352,7 @@ def main(args):
         
         train_loss, train_te_acc, train_te_iou = train(train_loader,images_loss, model, dice_loss, optimizer, epoch,writer)
 
-        if epoch %10 == 0 and epoch != 0:
+        if epoch %5 == 0 and epoch != 0:
             save_checkpoint({
                     'epoch': epoch + 1,
                     'state_dict': model.state_dict(),
@@ -369,9 +370,9 @@ if __name__ == '__main__':
     parser.add_argument('--arch', nargs='?', type=str, default='resnet50')
     parser.add_argument('--img_size', nargs='?', type=int, default=2480, #1280
                         help='Height of the input image')
-    parser.add_argument('--n_epoch', nargs='?', type=int, default=503, 
+    parser.add_argument('--n_epoch', nargs='?', type=int, default=600, 
                         help='# of the epochs')
-    parser.add_argument('--schedule', type=int, nargs='+', default=[503],
+    parser.add_argument('--schedule', type=int, nargs='+', default=[600],
                         help='Decrease learning rate at these epochs.')
     parser.add_argument('--batch_size', nargs='?', type=int, default=16,
                         help='Batch Size')
