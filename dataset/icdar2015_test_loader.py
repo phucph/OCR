@@ -12,7 +12,7 @@ import config
 
 # ic15_root_dir = '/home/gem/phucph/PixelLink.pytorch/dataset/
 ic15_root_dir = 'dataset/'
-ic15_test_data_dir = ic15_root_dir + 'train_image/'
+ic15_test_data_dir = ic15_root_dir + 'test_images/'
 # ic15_test_gt_dir = ic15_root_dir + 'test_gt/'
 
 random.seed(123456)
@@ -31,7 +31,7 @@ def scale(img, long_size=2480):
     h, w = img.shape[0:2]
     if max(h,w) > long_size:
         scale = long_size  * 1.0 / max(h, w)
-        sh,sw=h*scale,w*scale
+        h,w=h*scale,w*scale
         
     sw=int(w/32)*32
     sh=int(h/32)*32
